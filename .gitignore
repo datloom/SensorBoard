@@ -1,7 +1,5 @@
 .vscode
 
-
-
 libs/KafkaProcess/.venv/
 libs/KafkaProcess/.idea/
 # =========================
@@ -10,6 +8,11 @@ libs/KafkaProcess/.idea/
 libs/KSQL-UDF/.gradle/
 libs/KSQL-UDF/build/
 libs/KSQL-UDF/bin/
+
+libs/pntml_bridge-master/.gradle/
+libs/pntml_bridge-master/build/
+libs/pntml_bridge-master/bin/
+
 # =========================
 # IntelliJ IDEA
 # =========================
@@ -19,8 +22,18 @@ libs/KSQL-UDF/*.ipr
 libs/KSQL-UDF/*.iws
 libs/KSQL-UDF/out/
 
+libs/pntml_bridge-master/.idea/
+libs/pntml_bridge-master/*.iml
+libs/pntml_bridge-master/*.ipr
+libs/pntml_bridge-master/*.iws
+libs/pntml_bridge-master/out/
+
 # =========================
 # macOS
 # =========================
 libs/KSQL-UDF/.DS_Store
+libs/pntml_bridge-master/.DS_Store
+libs/KafkaProcess/.DS_Store
 frontend/.DS_Store
+
+libs/pntml_bridge-master/docker/
