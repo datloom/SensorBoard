@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SensorBoard</title>
+
+	<script src="https://unpkg.com/deck.gl@^9.0.0/dist.min.js"></script>
+	<script src="https://unpkg.com/@deck.gl/extensions@^9.0.0/dist.min.js"></script>
+
+	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.2/d3.min.js"></script>
+
+	<script src="https://kit.fontawesome.com/0ea36f0ff4.js" crossorigin="anonymous"></script>
+
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="https://unpkg.com/color-legend-element@1.0.3/build/color-legend-element.umd.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css'>
+	<link rel="stylesheet" href="./assets/css/style.css">
+
+	<style>
+		textarea{
+			background-color: rgba(0, 0, 0, 0);
+			border: 1px solid var(--border-color);
+			display: block;
+			width: 100%;
+		}
+		textarea::placeholder{
+			padding: 5px;
+			color: rgba(255,255,255,0.7);
+			
+		}
+		#btn_ui_query{
+			margin-top: 10px;
+			display: block;
+			width: 100%;
+		}
+		#logo{
+			left: 50%;
+		}
+		/* .running_list{
+			padding-bottom: 10px;
+		} */
+	</style>
+</head>
+
+<body>
+	<header>
+		<div class="ui_open">
+			<a id="btn_ui_open" href="#"><i class="fas fa-caret-square-right"></i></a>
+		</div>
+		<img id='logo' src="./assets/img/pntml_logo.svg" alt="PntML IoT Sensor Dashboard">
+		<a href="https://www.aist.go.jp/" target="_blank"><img src="./assets/img/w_aist.png" alt="AIST"></a>
+	</header>
+
+	<div id="ui_base" class="ui">
+		<div class="ui_upper">
+			<a id="btn_ui_fold" ><i class="fas fa-caret-square-left"></i></a>
+		</div>
+
+		<!-- not -->
+		<div id="raw">
+			<h5> Query </h5>
+			<div class="query_container">
+				<div id="raw_param">
+					<div>
+						<textarea id="query_textarea" name="textarea" rows="5" cols="60" placeholder="CREATE STREAM example AS&#13;&#10;SELECT * FROM example&#13;&#10;EMIT CHANGES"></textarea>
+					</div>
+				<input id="btn_ui_query"  type="button" value="Send">
+				</div>
+			</div>
+		</div>
+
+		<!-- not -->
+
+		<div id="raw">
+			<h5> Trajectory of This Area </h5>
+			<div class="parameter_container">
+				<div id="raw_param">
+					<div>
+						<label for="retention_period"> Delete when reply > </label>
+						<input id="retention_period" type="text", value=10000> msec
+					</div>
+					<div> 
+						<label for="active_period"> Deactivate when reply > </label>
+						<input id="active_period" type="text", value=5000> msec
+					</div>
+					<div> 
+						<label for="trail_length"> Remain path length: </label>
+						<input id="trail_length" type="text", value=100000> msec
+					</div>
+					<div> 
+						<label for="raw_width"> Line width: </label> 
+						<input id="raw_width" type="text" value="0.1">  
+					</div>
+				</div>
+				<input id="btn_ui_raw" type="button" value="Run">
+			</div>
+		</div>
+		<div class="layer_list_tab">
+			<input id="btn_ui_all" type="button" value="All">
+			<input id="btn_ui_active" type="button" value="Active">
+			<input id="btn_ui_hidden" type="button" value="Hidden">
+		</div>		
+		<div class="layer_list">
+		</div>
+
+		<div id="aggr"> 
+			<h5> Aggregation </h5>
+			<div class="parameter_container">
+				<div id="aggr_param">
+					<div> Hashing method: <select class="method">
+						<option value="GeoHash">GeoHash</option>
+						<option value="PDcode" selected>PDcode</option>
+					</select> </div>
+					<div> resolution: <input class="resolution" type="text", value=17> </div>
+					<div> Aggregation function: <select class="type">
+						<option value="SUM">SUM</option>
+						<option value="AVG">AVG</option>
+						<option value="MIN">MIN</option>
+						<option value="MAX">MAX</option>
+						<option value="COUNT" selected>COUNT</option>
+					</select> </div>
+					<div> Window size: <input class="window_size" type="text", value=5> sec </div>
+					<div> Window step: <input class="window_step" type="text", value=5> sec </div>
+				</div>
+				<input id="btn_ui_aggr" type="button" value="Run">
+			</div>
+		</div>
+
+		<div class="aggr_loading">
+			<div class="d-flex justify-content-center">
+				<div class="spinner-border" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="aggr_layer">			
+		</div>
+
+		<div id="drop_layer">			
+			<h5> Running Streams and Tables </h5>
+			<div class="parameter_container">
+				<div id="drop_param">
+					<div> Running: <span class="running_list"></span> </div>	
+					<div> Which to drop: <select class="drop_name">
+						<option value="clear_all">clear_all</option>
+					</select> </div>
+				</div>
+				<input id="btn_ui_drop" type="button" value="Run">
+				
+			</div>
+		</div>
+
+		<div class="ui_bottom">
+		</div>
+	</div>
+
+	<!-- OSD -->
+	<div id="osd_base" class="osd">
+		<div id="osd_content_base" class="osd_content_box">
+			<h2 id="osd_title"></h2>
+			<div id="osd_layer_setting" class="osd_content">
+				<h3>Layer Color</h3>
+				<div class="rgb_sliders">
+					<div>
+						<input type="range" id="range_r" name="range_r" min="0" max="255" step="1">
+						<label for="range_r">Red</label>
+					</div>
+					<div>
+						<input type="range" id="range_g" name="range_g" min="0" max="255" step="1">
+						<label for="range_g">Green</label>
+					</div>
+					<div>
+						<input type="range" id="range_b" name="range_b" min="0" max="255" step="1">
+						<label for="range_b">Blue</label>
+					</div>
+				</div>
+
+				<div class="centering">
+					<input type="button" value="OK" class="osd_ok">
+				</div>
+			</div>
+
+			<div id="osd_trajectory_layer_setting" class="osd_content">
+				<h3>Properties</h3>
+				<div> Line width: <input id="traj_width" type="text" value="0.1"> </div>
+				<br>
+
+				<div class="centering">
+					<input type="button" value="OK" class="osd_ok">
+				</div>
+			</div>
+
+			<div id="osd_aggregation_layer_setting" class="osd_content">
+				<h3>Properties</h3>
+				<div> Opacity: <input id="aggr_opacity" type="text" value="1.0"> </div>
+				<br>
+
+				<h3>Aggregation Color</h3>
+				<div> Range Value: <select class="range_value">
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8" selected>8</option>
+					<option value="9">9</option>
+				</select> </div>
+				<div> Scheme Value: <select class="scheme_value">
+					<option value="schemeYlGnBu">YlGnBu</option>
+					<option value="schemeRdYlGn">RdYlGn</option>
+					<option value="schemeRdYlBu">RdYlBu</option>
+					<option value="schemeSpectral">Spectral</option>
+					<option value="schemeBlues">Blues</option>
+					<option value="schemeGreens">Greens</option>
+					<option value="schemeOranges">Oranges</option>
+					<option value="schemePurples">Purples</option>
+					<option value="schemeReds" selected>Reds</option>
+				</select> </div>
+				<div> Domain Start <input class="domain_start" type="text" value="0"> </div>
+				<div> Domain Finish <input class="domain_finish" type="text" value="10"> </div>
+				<input id="btn_ui_acl" type="button" value="Set color legend">
+				<div id="color_legend_container">
+					<div id="color_legend">
+						<color-legend
+						titletext="Aggregation color legend"
+						scaletype="discrete"
+						domain="[0, 10]"
+						>
+						</color-legend>
+					</div>
+				</div>
+				<div id="color_legend_discription"> a <= value < b (except last one : a <= value) </div>
+
+				<br>
+				<div class="centering">
+					<input type="button" value="OK" class="osd_ok">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--- TEMPLATES -->
+	<div class="layer_list_element" id="layer_template">
+		<p class="layer_title"><span></span><i></i></p>
+		<p class="layer_datetime"></p>
+		<p class="layer_control_options"><a href="#" class="layer_control"><i class="fas fa-eye"></i></a><a href="#" class="layer_control_config"><i class="fas fa-cog"></i></a><a href="#" class="layer_control_delete"><i class="fas fa-trash-alt"></i></a></p>
+	</div>
+</body>
+
+<script>
+	$(document).ready(function() {
+		$('#osd_base').hide();
+		$('#osd_layer_setting').hide();	
+		
+		$('.layer_list_tab').hide();
+
+		$('#traj_pred').hide();
+		$('.traj_loading').hide();
+		
+		$('#aggr').hide();
+		$('.aggr_loading').hide();
+	});
+</script>
+
+<script type="module" src="./index.js"></script>
+
+</html>
