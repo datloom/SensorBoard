@@ -1,1 +1,0 @@
-# Storage for the ksqlDB UDF.jar

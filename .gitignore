@@ -1,4 +1,26 @@
-frontend/.DS_Store
+.vscode
 
-libs/KafkaProcess/.venv
-libs/KafkaProcess/.idea
+
+
+libs/KafkaProcess/.venv/
+libs/KafkaProcess/.idea/
+# =========================
+# Gradle
+# =========================
+libs/KSQL-UDF/.gradle/
+libs/KSQL-UDF/build/
+libs/KSQL-UDF/bin/
+# =========================
+# IntelliJ IDEA
+# =========================
+libs/KSQL-UDF/.idea/
+libs/KSQL-UDF/*.iml
+libs/KSQL-UDF/*.ipr
+libs/KSQL-UDF/*.iws
+libs/KSQL-UDF/out/
+
+# =========================
+# macOS
+# =========================
+libs/KSQL-UDF/.DS_Store
+frontend/.DS_Store
