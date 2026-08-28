@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: pntml-bridge
+  profiles:
+    active: dev
+
+server:
+  port: 8888
+
