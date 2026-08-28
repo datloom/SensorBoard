@@ -1,7 +1,7 @@
 .vscode
 
-libs/KafkaProcess/.venv/
-libs/KafkaProcess/.idea/
+run/kafka-publisher/.venv/
+run/kafka-publisher/.idea/
 # =========================
 # Gradle
 # =========================
@@ -33,7 +33,7 @@ libs/pntml_bridge-master/out/
 # =========================
 libs/KSQL-UDF/.DS_Store
 libs/pntml_bridge-master/.DS_Store
-libs/KafkaProcess/.DS_Store
+run/kafka-publisher/.DS_Store
 frontend/.DS_Store
 
 libs/pntml_bridge-master/docker/
