@@ -7,7 +7,11 @@ plugins {
 group = 'jp.go.aist.dprt'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-
+// java {
+//     toolchain {
+//         languageVersion = JavaLanguageVersion.of(17)
+//     }
+// }
 configurations.all {
     exclude module: 'slf4j-log4j12'
 }
@@ -39,4 +43,13 @@ dependencies {
 
 tasks.named('test') {
 //    useJUnitPlatform()
+}
+
+tasks.named('jar') {
+    enabled = false
+}
+
+tasks.named('bootJar') {
+    destinationDirectory = file('../../run/api-server')
+    archiveFileName = 'api-server.jar'
 }

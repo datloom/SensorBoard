@@ -48,5 +48,5 @@ java{
 shadowJar {
     archiveBaseName = "pnu-geoai-udfs"
     archiveClassifier = ""
-    destinationDirectory = file("../streaming-infra/extensions")
+    destinationDirectory = file("../../run/streaming-infra/extensions")
 }
