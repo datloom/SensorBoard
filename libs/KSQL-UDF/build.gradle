@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        // jcenter()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id "java"
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+sourceCompatibility = "11"
+targetCompatibility = "11"
+version = "0.0.1"
+
+repositories {
+    mavenCentral()
+    // jcenter()
+
+    maven {
+        url "https://packages.confluent.io/maven"
+    }
+}
+
+dependencies {
+    compileOnly "io.confluent.ksql:ksqldb-udf:7.7.1"
+    compileOnly "org.apache.kafka:kafka_2.13:3.7.0"
+    compileOnly "org.apache.kafka:connect-api:3.7.0"
+    implementation 'org.json:json:20220924'
+    implementation 'org.locationtech.proj4j:proj4j:1.2.2'
+    implementation files("libs/dggs-code-0.9.5.jar")
+    implementation fileTree(dir: 'libs/libs', includes: ['*.jar'])
+}
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "java"
+
+compileJava {
+    options.compilerArgs << "-parameters"
+}
+
+java{
+    withJavadocJar()
+}
+
+// $gradle shadowJar
+shadowJar {
+    archiveBaseName = "pnu-geoai-udfs"
+    archiveClassifier = ""
+    destinationDirectory = file("../streaming-infra/extensions")
+}
